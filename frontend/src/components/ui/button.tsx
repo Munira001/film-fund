@@ -4,34 +4,27 @@ import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0' +
-    ' hover-elevate active-elevate-2',
+  'pressable inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-semibold tracking-[-0.5px] transition-[transform,opacity,color,background-color,box-shadow,border-color] duration-150 ease-[cubic-bezier(0,0,0.2,1)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 disabled:hover:transform-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default:
-          // @replit: no hover, and add primary border
-          'bg-primary text-primary-foreground border border-primary-border',
+          'rounded-2xl bg-foreground text-background hover:opacity-90',
         destructive:
-          'bg-destructive text-destructive-foreground shadow-sm border-destructive-border',
+          'rounded-2xl bg-destructive text-destructive-foreground hover:opacity-90',
         outline:
-          // @replit Shows the background color of whatever card / sidebar / accent background it is inside of.
-          // Inherits the current text color. Uses shadow-xs. no shadow on active
-          // No hover state
-          ' border [border-color:var(--button-outline)] shadow-xs active:shadow-none ',
+          'rounded-3xl border border-border bg-background hover:bg-muted/60',
         secondary:
-          // @replit border, no hover, no shadow, secondary border.
-          'border bg-secondary text-secondary-foreground border border-secondary-border ',
-        // @replit no hover, transparent border
-        ghost: 'border border-transparent',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'rounded-2xl border border-border bg-card hover:bg-muted/60',
+        ghost:
+          'rounded-2xl border border-transparent bg-transparent hover:border-border hover:bg-muted/60',
+        link: 'rounded-none text-foreground underline-offset-4 hover:underline',
       },
       size: {
-        // @replit changed sizes
-        default: 'min-h-9 px-4 py-2',
-        sm: 'min-h-8 rounded-md px-3 text-xs',
-        lg: 'min-h-10 rounded-md px-8',
-        icon: 'h-9 w-9',
+        default: 'h-9 px-4 py-2',
+        sm: 'h-8 px-3 text-sm',
+        lg: 'h-12 px-6',
+        icon: 'h-9 w-9 rounded-2xl',
       },
     },
     defaultVariants: {
@@ -52,7 +45,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size }), className)}
         ref={ref}
         {...props}
       />
