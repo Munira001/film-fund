@@ -1,0 +1,414 @@
+{
+    "filmmaker_script": {
+        "project_title": "The Last Dawn",
+        "logline": "When Earth's last satellite fails, a disillusioned engineer must lead humanity's final mission to restore communication before civilization collapses.",
+        "genre": "Science Fiction / Drama",
+        "runtime_minutes": 112,
+        "synopsis": "In 2045, humanity relies on a single satellite for global communication. When it fails catastrophically, society faces immediate collapse. Engineer James Morgan, once brilliant but now broken by personal tragedy, is recruited for a desperate mission: launch a repair probe before the world descends into chaos. The film explores themes of redemption, sacrifice, and humanity's relationship with technology in a high-stakes thriller format.",
+        "estimated_budget": 1200000,
+        "budget_currency": "USD",
+        "filmmaker_name": "Sarah Chen",
+        "production_stage": "pre-production",
+        "filming_locations": [
+            "Los Angeles, California",
+            "Mojave Desert, California",
+            "San Francisco, California"
+        ],
+        "key_cast": [
+            "TBD - Lead Role: Dr. James Morgan",
+            "TBD - Supporting: Director Chen",
+            "TBD - Supporting: Control Room Officer"
+        ],
+        "target_audience": "Adults 18-55, Science Fiction enthusiasts",
+        "release_date": "2025-10-30",
+        "urgency_level": "urgent",
+        "target_funding_amount": 1200000,
+        "funding_type_seeking": [
+            "grants",
+            "investors",
+            "sponsors"
+        ],
+        "tax_incentive_eligibility": [
+            "California",
+            "Georgia"
+        ],
+        "grant_eligibility_criteria": [
+            "Independent film production",
+            "Director has prior award-winning experience",
+            "Addresses themes of social importance",
+            "Diverse production team",
+            "California-based production"
+        ],
+        "multimedia_assets": {
+            "video_pitch": {
+                "asset_type": "video_pitch",
+                "url": "https://vimeo.com/sarahchenfilms/the-last-dawn-pitch",
+                "duration_seconds": 332,
+                "upload_date": "2025-01-10",
+                "content_type": "director_pitch",
+                "urgency_detected": "urgent",
+                "confidence_level": 0.92
+            },
+            "visual_concept_reel": {
+                "asset_type": "visual_reel",
+                "url": "https://vimeo.com/sarahchenfilms/last-dawn-visuals",
+                "duration_seconds": 195,
+                "upload_date": "2025-01-12",
+                "content_type": "visual_style_reference"
+            },
+            "audio_pitch_recording": {
+                "asset_type": "audio_recording",
+                "url": "https://soundcloud.com/sarahchenfilms/pitch-recording",
+                "duration_seconds": 480,
+                "upload_date": "2025-01-08",
+                "tone_analysis": "urgent, passionate, professional",
+                "urgency_detected": "high",
+                "confidence_level": 0.88
+            }
+        },
+        "video_pitch_url": "https://vimeo.com/sarahchenfilms/the-last-dawn-pitch",
+        "metadata": {
+            "document_source_uri": "gs://filmfund-bucket/sample-documents/script.pdf",
+            "document_filename": "the_last_dawn_script.pdf",
+            "extraction_date": "2025-01-20",
+            "extraction_confidence": 0.95,
+            "total_pages": 45,
+            "relevant_pages": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                42,
+                43,
+                44,
+                45
+            ]
+        }
+    },
+    "production_budget": {
+        "project_title": "The Last Dawn",
+        "total_budget": 1200000,
+        "budget_currency": "USD",
+        "development_budget": 45000,
+        "pre_production_budget": 185000,
+        "production_budget": 650000,
+        "post_production_budget": 200000,
+        "marketing_budget": 100000,
+        "contingency_budget": 20000,
+        "crew_budget": 200000,
+        "cast_budget": 120000,
+        "equipment_rental": 80000,
+        "location_fees": 30000,
+        "insurance_budget": 45000,
+        "budget_period_start": "2025-01-15",
+        "budget_period_end": "2025-10-30",
+        "prepared_by": "Michael Rodriguez (Line Producer)",
+        "last_updated": "2025-01-20",
+        "funding_gap": 850000,
+        "funding_sources_secured": {
+            "producer_capital": 100000,
+            "private_investor": 200000,
+            "arts_council_grant": 50000
+        },
+        "total_funding_secured": 350000,
+        "co_production_partners": [
+            "Zenith Films Productions (in-kind services)",
+            "Local Film Office (permits waived)"
+        ],
+        "grant_funding_requested": 600000,
+        "investor_funding_requested": 250000,
+        "budget_notes": "Equipment rental includes 4K camera package. Location fees include both studio and desert permits. Insurance covers cast, equipment, and general liability. VFX budget reflects indie-level effects (not studio-scale).",
+        "metadata": {
+            "document_source_uri": "gs://filmfund-bucket/sample-documents/budget.pdf",
+            "document_filename": "the_last_dawn_budget.pdf",
+            "extraction_date": "2025-01-20",
+            "extraction_confidence": 0.93,
+            "total_pages": 8,
+            "relevant_pages": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ]
+        }
+    },
+    "production_schedule": {
+        "project_title": "The Last Dawn",
+        "project_start_date": "2025-01-15",
+        "estimated_completion_date": "2025-10-30",
+        "development_start": "2025-01-15",
+        "development_end": "2025-02-14",
+        "pre_production_start": "2025-02-15",
+        "pre_production_end": "2025-03-31",
+        "principal_photography_start": "2025-04-01",
+        "principal_photography_end": "2025-05-29",
+        "post_production_start": "2025-05-30",
+        "post_production_end": "2025-10-30",
+        "distribution_start": "2025-10-30",
+        "script_deadline": "2025-01-20",
+        "casting_deadline": "2025-03-15",
+        "first_day_of_shoot": "2025-04-01",
+        "last_day_of_shoot": "2025-05-29",
+        "rough_cut_deadline": "2025-07-15",
+        "final_cut_deadline": "2025-10-15",
+        "festival_submission_deadline": "2025-10-30",
+        "total_shooting_days": 28,
+        "prepared_by": "Production Manager (UPM)",
+        "funding_deadline": "2025-03-15",
+        "milestone_funding_schedule": {
+            "before_pre_production_feb_15": 230000,
+            "before_production_april_1": 450000,
+            "before_post_production_june_1": 200000,
+            "contingency_and_distribution": 120000
+        },
+        "phases_dependent_on_funding": [
+            "pre-production",
+            "principal-photography",
+            "post-production"
+        ],
+        "critical_path_items": [
+            "Funding deadline: March 15, 2025",
+            "Casting finalization: March 15, 2025",
+            "Equipment contracts: March 20, 2025",
+            "Location permits: March 5, 2025",
+            "Festival submission: October 30, 2025"
+        ],
+        "schedule_buffer_days": 5,
+        "metadata": {
+            "document_source_uri": "gs://filmfund-bucket/sample-documents/schedule.pdf",
+            "document_filename": "the_last_dawn_schedule.pdf",
+            "extraction_date": "2025-01-20",
+            "extraction_confidence": 0.91,
+            "total_pages": 6,
+            "relevant_pages": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ]
+        }
+    },
+    "filmmaker_profile": {
+        "filmmaker_name": "Sarah Chen",
+        "title": "Director / Producer",
+        "email": "sarah.chen@zenithfilms.com",
+        "phone": "(415) 555-0142",
+        "website": "www.sarahchenfilms.com",
+        "social_media": {
+            "instagram": "https://instagram.com/sarahchenfilms",
+            "instagram_followers": 8500,
+            "linkedin": "https://linkedin.com/in/sarahchen-director",
+            "vimeo": "https://vimeo.com/sarahchen",
+            "youtube": "https://youtube.com/sarahchenfilms"
+        },
+        "years_of_experience": 8,
+        "experience_level": "established",
+        "primary_role": "director",
+        "specializations": [
+            "Science Fiction",
+            "Character-Driven Drama",
+            "Visual Storytelling",
+            "Limited Budget Productions"
+        ],
+        "notable_films": [
+            "Silent Signal (2023) - $400K budget - Festival success",
+            "Echoes (2021) - $150K budget - Completed",
+            "Neon City (2019) - $45K budget - Short film"
+        ],
+        "festival_selections": [
+            "Sundance Film Festival (2023)",
+            "Berlin Film Festival (2022)",
+            "SXSW Film Festival (2023)",
+            "Tribeca Film Festival (2022)",
+            "20+ total festival selections"
+        ],
+        "awards_and_recognition": [
+            "Best Director - International Film Festival (2023)",
+            "Audience Award - Small Film Festival (2021)",
+            "Best Short - Emerging Filmmakers Festival (2019)",
+            "Breakthrough Director - Women in Film Awards (2021)",
+            "Variety 10 Directors to Watch (2023)",
+            "Filmmaker Magazine Emerging Talent (2022)",
+            "IndieWire Critics Pick (2023)"
+        ],
+        "film_education": [
+            "MFA Film Directing - University of Southern California (2017)",
+            "BA English Literature - UC Berkeley (2015)",
+            "Advanced Certificate in Cinematography - NYFA (2016)"
+        ],
+        "certifications": [
+            "Sundance Institute Director's Lab (2019)",
+            "Berlin Film Festival Talent Campus (2018)"
+        ],
+        "current_projects": [
+            "The Last Dawn (Feature Film - seeking funding)",
+            "Quantum Entanglement (Sci-Fi Feature in development)",
+            "The Forgotten City (Drama Feature in early concept)"
+        ],
+        "location_city": "Los Angeles",
+        "location_state": "California",
+        "location_country": "USA",
+        "bio": "Sarah Chen is an established independent filmmaker known for creating visually stunning science fiction stories with strong character development and limited budgets. With 8 years of professional experience and multiple festival selections, she has proven her ability to secure funding and deliver completed projects on schedule and within budget. Her breakthrough feature 'Silent Signal' (2023) won Best Director at the International Film Festival and screened at Sundance and Berlin.",
+        "seeking_funding": true,
+        "funding_goals": "$850,000 for The Last Dawn feature film with urgent production timeline (April 2025 start)",
+        "grant_track_record": {
+            "california_arts_council_grant_2023": 50000,
+            "san_francisco_film_society_grant_2022": 35000,
+            "regional_independent_film_fund_2021": 40000,
+            "national_endowment_for_the_arts_2020": 25000,
+            "total_grants_received": 150000
+        },
+        "investor_track_record": {
+            "silent_signal_2023": 200000,
+            "echoes_2021": 75000,
+            "total_investor_funding": 275000,
+            "investor_disputes": 0,
+            "investor_satisfaction": "High - all previous investors received profit sharing"
+        },
+        "previous_successful_projects": 3,
+        "grant_eligibility_met": [
+            "California Film Commission Grants",
+            "National Endowment for the Arts",
+            "Arts Council Grants",
+            "Diversity & Inclusion Filmmaker Funds",
+            "Women Filmmakers Grants",
+            "Independent Film Development Grants"
+        ],
+        "video_pitch_url": "https://vimeo.com/sarahchenfilms/the-last-dawn-pitch",
+        "multimedia_portfolio": {
+            "director_reel": "https://vimeo.com/sarahchenfilms/director-reel",
+            "director_reel_duration_seconds": 360,
+            "website": "www.sarahchenfilms.com",
+            "video_testimonials": [
+                "https://vimeo.com/sarahchenfilms/producer-testimonial",
+                "https://vimeo.com/sarahchenfilms/investor-testimonial",
+                "https://vimeo.com/sarahchenfilms/festival-director-testimonial"
+            ],
+            "behind_the_scenes": [
+                "https://vimeo.com/sarahchenfilms/silent-signal-bts",
+                "https://youtube.com/sarahchenfilms"
+            ],
+            "social_media": {
+                "instagram": "https://instagram.com/sarahchenfilms",
+                "vimeo": "https://vimeo.com/sarahchenfilms",
+                "youtube": "https://youtube.com/sarahchenfilms"
+            }
+        },
+        "multimedia_assets": {
+            "video_pitch": {
+                "asset_type": "video_pitch",
+                "url": "https://vimeo.com/sarahchenfilms/the-last-dawn-pitch",
+                "duration_seconds": 332,
+                "upload_date": "2025-01-10",
+                "urgency_detected": "urgent",
+                "confidence_level": 0.92
+            },
+            "director_reel": {
+                "asset_type": "portfolio_reel",
+                "url": "https://vimeo.com/sarahchenfilms/director-reel",
+                "duration_seconds": 360
+            }
+        },
+        "metadata": {
+            "document_source_uri": "gs://filmfund-bucket/sample-documents/profile.pdf",
+            "document_filename": "sarah_chen_filmmaker_profile.pdf",
+            "extraction_date": "2025-01-20",
+            "extraction_confidence": 0.94,
+            "total_pages": 12,
+            "relevant_pages": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            ]
+        }
+    },
+    "filmmaker_funding_profile": {
+        "filmmaker_name": "Sarah Chen",
+        "current_project_title": "The Last Dawn",
+        "filmmaker_profile": {
+            "filmmaker_name": "Sarah Chen",
+            "title": "Director / Producer",
+            "years_of_experience": 8,
+            "experience_level": "established",
+            "seeking_funding": true
+        },
+        "script": {
+            "project_title": "The Last Dawn",
+            "genre": "Science Fiction / Drama",
+            "urgency_level": "urgent",
+            "target_funding_amount": 1200000
+        },
+        "budget": {
+            "total_budget": 1200000,
+            "total_funding_secured": 350000,
+            "funding_gap": 850000
+        },
+        "schedule": {
+            "funding_deadline": "2025-03-15",
+            "principal_photography_start": "2025-04-01",
+            "project_start_date": "2025-01-15",
+            "estimated_completion_date": "2025-10-30"
+        },
+        "total_budget_needed": 1200000,
+        "total_funding_secured": 350000,
+        "total_funding_gap": 850000,
+        "project_urgency": "urgent",
+        "funding_deadline": "2025-03-15",
+        "time_to_production": 76,
+        "target_grant_types": [
+            "Independent film grants",
+            "Arts council grants",
+            "Regional film commission grants",
+            "Diversity filmmaker grants",
+            "Women filmmaker grants"
+        ],
+        "grant_eligibility_summary": [
+            "California Film Commission Grants",
+            "National Endowment for the Arts",
+            "Arts Council Grants",
+            "Women Filmmakers Grants",
+            "Independent Film Development Grants"
+        ],
+        "filmmaker_strengths_for_grants": [
+            "8 years of professional filmmaking experience",
+            "Award-winning director (Best Director 2023)",
+            "Successful track record with previous funded projects",
+            "Established production company",
+            "Diverse and experienced production team",
+            "Previously raised $425K+ for past projects",
+            "Multiple festival selections and awards",
+            "Strong investor satisfaction and relationships"
+        ],
+        "potential_concerns_for_grants": [
+            "Tight funding deadline (March 15, 2025)",
+            "Ambitious budget for independent production",
+            "First sci-fi feature (previous projects smaller budget)"
+        ],
+        "recommended_funding_strategy": "Pursue California Film Commission grants ($300K) + National Endowment for the Arts ($300K) simultaneously while securing private investor commitments ($250K). Emphasize director's award-winning track record and past project delivery. Timeline is critical - fund allocation decisions must be made by March 15, 2025.",
+        "priority_grant_categories": [
+            "1. California Film Commission (highest alignment)",
+            "2. National Endowment for the Arts",
+            "3. Regional Arts Council Grants",
+            "4. Women Filmmaker Grants",
+            "5. Independent Film Development Grants"
+        ],
+        "profile_created_date": "2025-01-20",
+        "profile_last_updated": "2025-01-20"
+    }
+}

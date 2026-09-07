@@ -1,0 +1,343 @@
+# FILMFUND - Film Funding Discovery Agent
+
+> The intelligent funding room for independent filmmakers.
+
+## Overview
+
+FilmFund is an agentic funding discovery platform that helps independent
+filmmakers discover, evaluate, and act on film funding opportunities.
+
+Instead of forcing filmmakers to manually search dozens of grant databases,
+FilmFund turns a filmmaker's project, genre, location, budget, career stage,
+and funding needs into a personalized funding search.
+
+## The Problem
+
+Independent filmmakers don't only have a funding problem.
+They have a funding discovery problem.
+
+Relevant grants are fragmented across organizations, countries, eligibility
+requirements, deadlines, funding amounts, and application processes.
+
+A filmmaker can spend hours searching for opportunities and still miss
+funding they qualify for.
+
+## The Solution
+
+FilmFund creates a personalized funding workflow:
+
+Filmmaker profile
+       |
+       v
+Project requirements
+       |
+       v
+Agentic grant discovery
+       |
+       v
+Eligibility + relevance filtering
+       |
+       v
+Match scoring
+       |
+       v
+Save / Compare
+       |
+       v
+Application tracking
+
+The goal is to move filmmakers from:
+
+"Where can I find funding?"
+
+to:
+
+"Which funding opportunities should I pursue next?"
+
+## What Makes FilmFund Agentic
+
+[This section is VERY important for the hackathon.]
+
+FilmFund is designed around an agentic workflow rather than a static
+grant directory.
+
+The system can:
+
+- interpret a natural-language funding request
+- search for relevant opportunities
+- aggregate results from external sources
+- remove duplicate opportunities
+- evaluate relevance against project requirements
+- rank opportunities using match signals
+- apply filmmaker-specific filters
+- maintain a shortlist
+- move selected opportunities into an application workflow
+
+The agentic layer is intended to reduce the amount of manual research required
+between a filmmaker having a project and identifying realistic funding paths.
+
+## Core Features
+
+### Intelligent Grant Discovery
+
+Search for opportunities using natural language such as:
+
+"Film funding opportunities for an independent drama filmmaker"
+
+FilmFund retrieves and ranks relevant opportunities instead of requiring
+filmmakers to know the exact name of a grant beforehand.
+
+### Filmmaker Profile
+
+Filmmakers can maintain information including:
+
+- location
+- career level
+- genres
+- project budget
+- scripts/projects
+- production stage
+
+This information can be used to improve opportunity matching.
+
+### Match Scoring
+
+Each opportunity receives a relevance score based on available project and
+opportunity signals.
+
+### Grant Filtering
+
+Filter opportunities by:
+
+- genre
+- location
+- budget
+- eligibility
+- deadline
+- funding amount
+
+### Save and Compare
+
+Filmmakers can shortlist opportunities and compare up to three grants.
+
+### Application Tracker
+
+Selected opportunities can be moved into an application workflow and tracked
+through the funding process.
+
+### Budget Calculator
+
+Filmmakers can estimate project funding requirements and understand how
+opportunities relate to their project budget.
+
+### Research Resources
+
+FilmFund provides additional funding and filmmaking resources alongside
+discovered opportunities.
+
+## Architecture 1
+
+FilmFund uses an agentic research pipeline that transforms a filmmaker's project requirements into ranked, actionable funding opportunities.
+
+### Main Components
+
+#### 1. `search_grants()`
+
+- **Input:** Filmmaker details such as budget, genre, experience, and timeline
+- **Action:** Generates a targeted search query and calls the Parallel API
+- **Output:** Raw grant opportunities
+
+#### 2. `analyze_grants()`
+
+- **Input:** Raw grant data
+- **Action:** Cleans results, checks grant details, identifies suspicious opportunities, and extracts relevant information
+- **Output:** Structured and analyzed grant opportunities
+
+#### 3. `rank_opportunities()`
+
+- **Input:** Analyzed grants and filmmaker profile
+- **Action:** Scores opportunities based on factors such as relevance, funding amount, eligibility, and timeline
+- **Output:** Ranked funding opportunities
+
+#### 4. `search_producers()`
+
+- **Input:** Project budget and genre
+- **Action:** Searches for potentially relevant production companies and producers
+- **Output:** Matching production opportunities
+
+#### 5. `build_response()`
+
+- **Input:** Grants, producers, and other funding opportunities
+- **Action:** Organizes the research into a clear response with actionable next steps
+- **Output:** Prioritized opportunities for the filmmaker
+
+### Agentic Data Flow
+
+Filmmaker Profile
+        ↓
+Project Requirements
+        ↓
+Targeted Grant Search
+        ↓
+Analyze & Validate Results
+        ↓
+Rank Opportunities
+        ↓
+Generate Actionable Recommendations
+        ↓
+Filmmaker Saves, Compares, or Tracks Opportunities
+
+### Error Handling
+
+- **Search API failure:** Fall back to available cached or fallback grant data
+- **No relevant results:** Suggest alternative funding paths or broader search criteria
+- **Suspicious opportunity:** Flag the opportunity for further review
+- **Incomplete grant information:** Mark missing information rather than presenting it as verified
+
+## Architecture 2
+
+```text
+                        FILMFUND
+                           |
+                           v
+                    React Frontend
+                           |
+                           v
+                    Search Interface
+                           |
+                           v
+                    Backend API
+                           |
+             +-------------+-------------+
+             |                           |
+             v                           v
+      Grant Discovery              Health / API
+          Service                    Services
+             |
+             v
+      External Grant Sources
+             |
+             v
+      Normalization / Deduplication
+             |
+             v
+       Relevance + Matching
+             |
+             v
+      Ranked Grant Opportunities
+             |
+             v
+          Frontend
+Technology Stack
+Frontend
+React
+TypeScript
+Vite
+Tailwind CSS
+TanStack Query
+Lucide React
+Backend
+Python
+Grant discovery/search services
+REST API
+Data / State
+Browser localStorage for user session persistence
+Backend services for live grant discovery
+Project Structure
+film-fund/
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx
+│   │   ├── components/
+│   │   ├── lib/
+│   │   └── ...
+│   ├── package.json
+│   └── ...
+│
+├── backend/
+│   ├── src/
+│   │   ├── parallel_api.py
+│   │   └── ...
+│   └── ...
+│
+└── README.md
+Running Locally
+Prerequisites
+Node.js
+npm
+Python 3.x
+Frontend
+cd frontend
+npm install
+npm run dev
+
+The frontend will run on the Vite development server.
+
+Backend
+cd backend
+# install backend dependencies
+# start the API server
+
+Add the exact backend commands here once finalized.
+
+Example Workflow
+Create or update a filmmaker profile.
+Describe the funding need.
+Search for grants.
+Review ranked opportunities.
+Filter by eligibility, location, genre, budget, or deadline.
+Compare promising opportunities.
+Save the strongest matches.
+Add opportunities to the application tracker.
+Continue managing the funding pipeline from one workspace.
+Why FilmFund
+
+FilmFund is not intended to be another database of grant links.
+
+Its purpose is to reduce the research burden surrounding film financing.
+
+The long-term vision is an intelligent funding assistant that understands a
+film project and continuously identifies realistic funding opportunities as
+the project evolves.
+
+Hackathon Demo
+
+[Add your deployed application URL here]
+
+[Add your repository URL here]
+
+Future Roadmap
+Continuous funding opportunity monitoring
+Deadline alerts
+Deeper eligibility reasoning
+Project-to-grant semantic matching
+Automated application preparation
+Grant application requirement extraction
+Personalized funding strategies
+Multi-source grant verification
+Funding pipeline analytics
+License
+
+[Add license]
+
+
+### One thing I would change from a normal README
+
+For this hackathon, **do not oversell features that aren't actually implemented**.
+
+Judges can usually tell when a project claims "AI-powered autonomous agents" but the demo is just a search box calling an API.
+
+Your README should make a very clear distinction between:
+
+**Implemented now**
+
+and
+
+**Future roadmap**
+
+That actually makes the project look more credible.
+
+Also, because your actual code already has `useSearchGrants()`, live-search status, fallback results, profile matching, saved grants, comparison, and an application tracker, we can make the README describe the **real architecture you built**, rather than generic AI marketing.
+
+**:contentReference[oaicite:1]{index=1}.**
+```
