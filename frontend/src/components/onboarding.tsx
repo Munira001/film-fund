@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, Loader2, X } from "lucide-react";
 
 import { BrandMark } from "@/components/brand-mark";
+import { withProfileDefaults } from "@/lib/filmmaker";
 
 export type Intake = {
   name: string;
@@ -28,16 +29,13 @@ const SETUP_STEPS = [
 const SETUP_AT = [0, 1200, 2600, 4000] as const;
 
 export function emptyProfileFromIntake(intake: Intake) {
-  return {
-    name: intake.name.trim(),
-    location: "",
-    level: "",
-    genres: intake.genres.trim(),
-    budget: "",
-    scripts: "",
-    production: intake.production.trim(),
-    keywords: intake.keywords.trim(),
-  };
+  // Anything left blank during onboarding falls back to the filmmaker profile.
+  return withProfileDefaults({
+    name: intake.name,
+    genres: intake.genres,
+    production: intake.production,
+    keywords: intake.keywords,
+  });
 }
 
 export function OnboardingDialog({

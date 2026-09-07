@@ -56,6 +56,14 @@ import {
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  defaultProfile,
+  FILMMAKER_EMAIL,
+  MEMBER_SINCE,
+  scriptsInDevelopment,
+  withProfileDefaults,
+  works,
+} from "@/lib/filmmaker";
 
 
 import {
@@ -227,16 +235,7 @@ function isTab(value: string | undefined): value is Tab {
   return tabs.some((tab) => tab.id === value);
 }
 
-const profileDefaults: Profile = {
-  name: "",
-  location: "",
-  level: "",
-  genres: "",
-  budget: "",
-  scripts: "",
-  production: "",
-  keywords: "",
-};
+const profileDefaults: Profile = defaultProfile;
 
 /* =========================================================
    HELPERS
@@ -268,6 +267,30 @@ function parseMoney(value: string) {
   return Number.isFinite(amount) && amount > 0
     ? String(Math.round(amount))
     : "";
+}
+
+/**
+ * Open the funder's application website in a new tab.
+ * Returns false (with a toast) when the grant has no usable link.
+ */
+function openApplicationSite(grant: Grant) {
+  const url = grant.url?.trim();
+
+  if (!url || !/^https?:\/\//i.test(url)) {
+    toast({
+      title: "No application link",
+      description: `${grant.organization} did not publish an application URL for this opportunity.`,
+    });
+    return false;
+  }
+
+  window.open(url, "_blank", "noopener,noreferrer");
+
+  toast({
+    title: "Application page opened",
+    description: `${grant.organization} opened in a new tab.`,
+  });
+  return true;
 }
 
 function downloadFile(
@@ -522,7 +545,7 @@ function SearchPage({
   const [location, setLocation] =
     useState("");
   const [budget, setBudget] =
-    useState("");
+    useState("10000");
 
   const [eligibility, setEligibility] =
     useState("");
@@ -538,12 +561,6 @@ function SearchPage({
 
   const [sortBy, setSortBy] =
     useState<SortBy>("match");
-
-  const [applicationGrant, setApplicationGrant] =
-    useState<Grant | null>(null);
-
-  const [applicationNote, setApplicationNote] =
-    useState("");
 
   const [detailsGrant, setDetailsGrant] =
     useState<Grant | null>(null);
@@ -744,71 +761,37 @@ function SearchPage({
   const apply = (
     grant: Grant,
   ) => {
-    setApplicationGrant(
-      grant,
-    );
+    // Send the filmmaker straight to the funder's application page and
+    // record the opportunity in the tracker.
+    if (!openApplicationSite(grant)) {
+      return;
+    }
 
-    setApplicationNote("");
+    if (
+      !applications.some(
+        (application) =>
+          application.id === grant.id,
+      )
+    ) {
+      setApplications([
+        ...applications,
+        {
+          id: grant.id,
+          title: grant.title,
+          organization: grant.organization,
+          funding: grant.funding,
+          status: "Submitted",
+          date: new Date()
+            .toISOString()
+            .slice(0, 10),
+        },
+      ]);
+    }
 
     showNotice(
-      `Application form ready for ${grant.title}.`,
+      `Opened ${grant.organization} application page. Added to your tracker.`,
     );
-
-    toast({
-      title:
-        "Application form opened",
-      description: `${grant.organization} details are pre-filled.`,
-    });
   };
-
-  const submitApplication =
-    () => {
-      if (!applicationGrant) {
-        return;
-      }
-
-      if (
-        !applications.some(
-          (application) =>
-            application.id ===
-            applicationGrant.id,
-        )
-      ) {
-        setApplications([
-          ...applications,
-          {
-            id: applicationGrant.id,
-            title:
-              applicationGrant.title,
-            organization:
-              applicationGrant.organization,
-            funding:
-              applicationGrant.funding,
-            status: "Submitted",
-            date: new Date()
-              .toISOString()
-              .slice(0, 10),
-          },
-        ]);
-      }
-
-      setApplicationGrant(
-        null,
-      );
-
-      showNotice(
-        "Application added to your tracker.",
-      );
-
-      toast({
-        title:
-          "Application tracked",
-        description:
-          applicationNote
-            ? "Your note was saved for this session."
-            : "You can update its status from the tracker.",
-      });
-    };
 
   const exportResults = (
     format: "csv" | "json",
@@ -1071,6 +1054,9 @@ function SearchPage({
               >
                 <option value="">
                   Any budget
+                </option>
+                <option value="10000">
+                  $10,000
                 </option>
                 <option value="25000">
                   $25,000
@@ -1369,126 +1355,6 @@ function SearchPage({
                 </div>
               ))}
           </div>
-        </div>
-      )}
-
-      {applicationGrant && (
-        <div
-          className="fixed inset-0 z-40 grid place-items-center bg-black/55 p-4 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="application-form-title"
-        >
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              submitApplication();
-            }}
-            className="w-full max-w-xl rounded-[10px] border border-border bg-card p-6 shadow-2xl md:p-8"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2
-                  id="application-form-title"
-                  className="text-lg font-semibold"
-                >
-                  {applicationGrant.title}
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {applicationGrant.organization}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setApplicationGrant(
-                    null,
-                  )
-                }
-                className="rounded-full p-2 text-muted-foreground hover:bg-muted"
-                aria-label="Close application form"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <label className="text-xs font-bold sm:col-span-2">
-                Grant
-
-                <input
-                  value={
-                    applicationGrant.title
-                  }
-                  readOnly
-                  className="mt-2 h-11 w-full rounded-2xl border border-input bg-muted px-3 text-sm font-normal"
-                />
-              </label>
-
-              <label className="text-xs font-bold">
-                Organization
-
-                <input
-                  value={
-                    applicationGrant.organization
-                  }
-                  readOnly
-                  className="mt-2 h-11 w-full rounded-2xl border border-input bg-muted px-3 text-sm font-normal"
-                />
-              </label>
-
-              <label className="text-xs font-bold">
-                Funding
-
-                <input
-                  value={
-                    applicationGrant.funding
-                  }
-                  readOnly
-                  className="mt-2 h-11 w-full rounded-2xl border border-input bg-muted px-3 text-sm font-normal"
-                />
-              </label>
-
-              <label className="text-xs font-bold sm:col-span-2">
-                Application note
-
-                <textarea
-                  value={applicationNote}
-                  onChange={(event) =>
-                    setApplicationNote(
-                      event.target.value,
-                    )
-                  }
-                  placeholder="What will you remember about this opportunity?"
-                  className="mt-2 min-h-24 w-full rounded-2xl border border-input bg-background p-3 text-sm font-normal outline-none focus:border-ring"
-                  data-testid="input-application-note"
-                />
-              </label>
-            </div>
-
-            <div className="mt-7 flex justify-end gap-3 border-t border-border pt-5">
-              <button
-                type="button"
-                onClick={() =>
-                  setApplicationGrant(
-                    null,
-                  )
-                }
-                className="rounded-2xl px-4 py-2 text-sm font-semibold hover:bg-muted"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                className="rounded-2xl bg-foreground px-5 py-2 text-sm font-semibold text-background hover:opacity-90"
-                data-testid="button-submit-application"
-              >
-                Add to tracker
-              </button>
-            </div>
-          </form>
         </div>
       )}
 
@@ -1990,12 +1856,64 @@ function ProfilePage({
           <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-foreground">
             {draft.scripts}
           </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {scriptsInDevelopment.map((script) => (
+              <a
+                key={script.title}
+                href={script.file}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+              >
+                {script.title} script
+                <ExternalLink size={12} />
+              </a>
+            ))}
+          </div>
         </div>
       ) : (
         <span data-testid="status-scripts-empty" className="sr-only">
           No scripts listed yet.
         </span>
       )}
+
+      <div
+        className="mt-5 rounded-[10px] border border-border bg-card p-5"
+        data-testid="card-portfolio"
+      >
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <p className="text-sm font-medium">Portfolio</p>
+          <p className="font-mono text-xs tracking-[0.5px] text-muted-foreground">
+            {FILMMAKER_EMAIL} · Member since {MEMBER_SINCE}
+          </p>
+        </div>
+        <ul className="mt-3 divide-y divide-border">
+          {works.map((work) => (
+            <li
+              key={work.file}
+              className="flex flex-wrap items-center justify-between gap-3 py-3"
+            >
+              <div>
+                <p className="text-sm font-medium">{work.title}</p>
+                <p className="mt-0.5 font-mono text-xs tracking-[0.5px] text-muted-foreground">
+                  {[work.genre, work.format, work.year]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+              </div>
+              <a
+                href={`/media/${work.file}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:bg-muted/60"
+              >
+                Watch
+                <ExternalLink size={12} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
@@ -2078,16 +1996,9 @@ function SavedPage({
                     "Comparison works from the live search results.",
                 })
               }
-              onApply={() => {
-                setActive("tracker");
-
-                toast({
-                  title:
-                    "Application tracker opened",
-                  description:
-                    "Open this opportunity from Search Grants to start a pre-filled application.",
-                });
-              }}
+              onApply={() =>
+                openApplicationSite(grant)
+              }
               onDetails={() =>
                 setDetailsGrant(
                   grant,
@@ -2314,11 +2225,13 @@ function BudgetPage({
   const range =
     total <= 0
       ? "Enter costs to see a range"
-      : total <= 50000
-        ? "$10k–$50k"
-        : total <= 100000
-          ? "$50k–$100k"
-          : "$100k+";
+      : total <= 10000
+        ? "Under $10k"
+        : total <= 50000
+          ? "$10k–$50k"
+          : total <= 100000
+            ? "$50k–$100k"
+            : "$100k+";
 
   return (
     <div className="grid gap-4 md:grid-cols-[minmax(0,1.4fr)_minmax(16rem,0.8fr)]">
@@ -2495,16 +2408,13 @@ function Workspace({
 
   const [profile, setProfile] =
     useState<Profile>(() => {
-      const stored = readStorage(
+      const stored = readStorage<Partial<Profile>>(
         "filmfund-profile",
         profileDefaults,
       );
 
-      return {
-        ...profileDefaults,
-        ...stored,
-        keywords: stored.keywords ?? "",
-      };
+      // Blank fields in an older saved profile fall back to the defaults.
+      return withProfileDefaults(stored);
     });
 
   const [saved, setSaved] =

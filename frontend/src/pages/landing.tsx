@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  ArrowRight,
+  ExternalLink,
   Menu,
+  Play,
   X,
 } from "lucide-react";
 
@@ -9,6 +12,7 @@ import {
   type Intake,
   OnboardingDialog,
 } from "@/components/onboarding";
+import { FILMMAKER, type Work, works } from "@/lib/filmmaker";
 
 type Tab =
   | "search"
@@ -18,7 +22,7 @@ type Tab =
   | "budget"
   | "resources";
 
-type LandingPanel = "form" | "how" | "pricing" | null;
+type LandingPanel = "form" | "how" | "works" | null;
 
 const funders = [
   "Sundance Institute",
@@ -205,6 +209,207 @@ function FeatureOverlay({
         { label: "Moonlight", value: "Script" },
       ]}
     />
+  );
+}
+
+function WorkCard({ work }: { work: Work }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [started, setStarted] = useState(false);
+  const [missing, setMissing] = useState(false);
+  const src = `/media/${work.file}`;
+
+  const meta = [work.genre, work.year, work.runtime].filter(Boolean);
+
+  const play = () => {
+    const el = videoRef.current;
+    if (!el) return;
+    el.play()
+      .then(() => setStarted(true))
+      .catch(() => setStarted(true));
+  };
+
+  return (
+    <article
+      className="group flex flex-col overflow-hidden rounded-[14px] border border-white/10 bg-white/[0.06] shadow-[0_24px_60px_rgba(0,0,0,0.35)] backdrop-blur-md"
+      data-testid={`work-card-${work.file}`}
+    >
+      <div className="relative aspect-video bg-black">
+        {missing ? (
+          <div className="absolute inset-0 grid place-items-center px-6 text-center">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.6px] text-white/45">
+                Video not found
+              </p>
+              <p className="mt-2 font-mono text-xs text-white/60">
+                frontend/public/media/{work.file}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <video
+            ref={videoRef}
+            src={`${src}#t=0.5`}
+            poster={work.poster}
+            preload="metadata"
+            playsInline
+            controls={started}
+            onError={() => setMissing(true)}
+            className="h-full w-full object-cover"
+          />
+        )}
+        {!started && !missing ? (
+          <button
+            type="button"
+            onClick={play}
+            aria-label={`Play ${work.title}`}
+            className="absolute inset-0 grid place-items-center bg-gradient-to-t from-black/65 via-black/10 to-transparent"
+          >
+            <span className="grid size-16 place-items-center rounded-full border border-white/40 bg-white/15 text-white backdrop-blur-md transition duration-200 group-hover:scale-105 group-hover:bg-white/25">
+              <Play size={22} fill="currentColor" className="ml-1" />
+            </span>
+          </button>
+        ) : null}
+      </div>
+
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.6px] text-white/55">
+          {meta.map((item, index) => (
+            <span key={item} className="flex items-center gap-2">
+              {index > 0 ? <span aria-hidden="true">·</span> : null}
+              {item}
+            </span>
+          ))}
+        </div>
+        <h3 className="mt-2 text-xl font-medium tracking-[-0.3px] text-white">
+          {work.title}
+        </h3>
+        <p className="mt-1 text-sm text-white/55">
+          {work.format} · {FILMMAKER}
+        </p>
+        {work.logline ? (
+          <p className="mt-3 text-sm leading-6 text-white/70">{work.logline}</p>
+        ) : null}
+        <div className="mt-auto flex flex-wrap items-center gap-3 pt-5">
+          <a
+            href={src}
+            target="_blank"
+            rel="noreferrer"
+            className="pressable inline-flex h-10 items-center gap-2 rounded-[8px] bg-white px-4 text-sm font-medium text-[#1d1d16] hover:bg-white/90"
+          >
+            Watch full video
+            <ExternalLink size={14} />
+          </a>
+          {work.script ? (
+            <a
+              href={work.script}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-10 items-center gap-2 rounded-[8px] border border-white/20 px-4 text-sm text-white/80 hover:bg-white/10 hover:text-white"
+            >
+              Read script
+            </a>
+          ) : null}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+type NewsletterState = "idle" | "sending" | "done" | "local" | "error";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState<NewsletterState>("idle");
+
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const value = email.trim().toLowerCase();
+    if (!EMAIL_PATTERN.test(value)) {
+      setState("error");
+      return;
+    }
+
+    setState("sending");
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: value }),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      setState("done");
+    } catch {
+      // Backend offline: keep the address on this device so it isn't lost.
+      try {
+        const key = "filmfund-newsletter";
+        const saved: string[] = JSON.parse(
+          window.localStorage.getItem(key) ?? "[]",
+        );
+        if (!saved.includes(value)) saved.push(value);
+        window.localStorage.setItem(key, JSON.stringify(saved));
+      } catch {
+        /* storage unavailable */
+      }
+      setState("local");
+    }
+    setEmail("");
+  };
+
+  const message =
+    state === "done"
+      ? "You're on the list."
+      : state === "local"
+        ? "Saved on this device. It syncs when the FILMFUND backend is running."
+        : state === "error"
+          ? "Enter a valid email address."
+          : null;
+
+  return (
+    <div className="max-w-md" data-testid="newsletter">
+      <p className="text-sm">Newsletter</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        Add your email to the newsletter. New grants, deadlines, and
+        finishing funds, once a week.
+      </p>
+      <form
+        onSubmit={submit}
+        className="mt-4 flex items-center gap-1 rounded-full border border-border bg-background p-1"
+      >
+        <input
+          value={email}
+          onChange={(event) => {
+            setEmail(event.target.value);
+            if (state !== "idle") setState("idle");
+          }}
+          type="email"
+          autoComplete="email"
+          inputMode="email"
+          placeholder="you@studio.com"
+          aria-label="Email address"
+          data-testid="input-newsletter-email"
+          className="h-10 min-w-0 flex-1 rounded-full bg-transparent px-4 text-sm outline-none placeholder:text-foreground/45"
+        />
+        <button
+          type="submit"
+          disabled={state === "sending"}
+          data-testid="button-newsletter-submit"
+          className="pressable inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-foreground px-4 text-sm font-medium text-background hover:opacity-90 disabled:opacity-60"
+        >
+          {state === "sending" ? "Adding…" : "Subscribe"}
+          <ArrowRight size={14} />
+        </button>
+      </form>
+      {message ? (
+        <p
+          role="status"
+          className={`mt-2 text-xs ${state === "error" ? "text-destructive" : "text-muted-foreground"}`}
+        >
+          {message}
+        </p>
+      ) : null}
+    </div>
   );
 }
 
@@ -440,11 +645,11 @@ export function Landing({
                   Demo
                 </button>
                 <button
-                  onClick={() => openPanel("pricing")}
-                  data-testid="link-pricing"
+                  onClick={() => openPanel("works")}
+                  data-testid="link-sample-works"
                   className="h-10 rounded-[6px] px-4 text-sm text-foreground/80 hover:bg-white hover:text-foreground"
                 >
-                  Pricing
+                  Sample works
                 </button>
               </nav>
               <button
@@ -484,10 +689,10 @@ export function Landing({
                 Demo
               </button>
               <button
-                onClick={() => openPanel("pricing")}
+                onClick={() => openPanel("works")}
                 className="w-full rounded-lg px-3 py-2.5 text-left text-sm hover:bg-muted/60"
               >
-                Pricing
+                Sample works
               </button>
               <button
                 onClick={() => openPanel("form")}
@@ -545,17 +750,44 @@ export function Landing({
             className="section-shell pt-0"
             aria-live="polite"
           >
-            <div className="mx-auto max-w-7xl rounded-[10px] border border-border bg-card p-6 md:p-10">
-              <div className="flex items-start justify-between gap-6">
+            <div
+              className={
+                panel === "works"
+                  ? "relative mx-auto max-w-7xl overflow-hidden rounded-[10px] border border-white/10 bg-[#15140f] p-6 text-white md:p-10"
+                  : "mx-auto max-w-7xl rounded-[10px] border border-border bg-card p-6 md:p-10"
+              }
+            >
+              {panel === "works" ? (
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_20%_0%,rgba(210,86,17,0.22),transparent_70%),radial-gradient(50%_40%_at_100%_100%,rgba(255,255,255,0.06),transparent_70%)]"
+                />
+              ) : null}
+              <div className="relative flex items-start justify-between gap-6">
                 <div>
+                  {panel === "works" ? (
+                    <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.6px] text-white/55">
+                      Portfolio · {FILMMAKER}
+                    </p>
+                  ) : null}
                   <h2 className="text-2xl font-semibold tracking-[-0.5px] md:text-3xl">
-                    {panel === "how" ? "How it works" : "Pricing"}
+                    {panel === "how" ? "How it works" : "Sample works"}
                   </h2>
+                  {panel === "works" ? (
+                    <p className="mt-3 max-w-xl text-sm leading-7 text-white/65">
+                      Four films from the slate. Each one is proof of the track
+                      record behind every application FILMFUND helps you send.
+                    </p>
+                  ) : null}
                 </div>
                 <button
                   type="button"
                   onClick={() => setPanel(null)}
-                  className="grid size-11 place-items-center rounded-2xl border border-border text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  className={
+                    panel === "works"
+                      ? "grid size-11 shrink-0 place-items-center rounded-2xl border border-white/15 text-white/60 hover:bg-white/10 hover:text-white"
+                      : "grid size-11 shrink-0 place-items-center rounded-2xl border border-border text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  }
                   aria-label="Close section"
                 >
                   <X size={18} />
@@ -609,33 +841,11 @@ export function Landing({
                 </div>
               )}
 
-              {panel === "pricing" && (
-                <div className="mt-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-                  <div>
-                    <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
-                      No complicated plans here. FILMFUND is built around one
-                      focused workflow: discover opportunities, make an informed
-                      decision, then keep the application moving.
-                    </p>
-                    <div className="mt-6 grid gap-px bg-border sm:grid-cols-3">
-                      {["Submitted", "Pending", "Awarded"].map((status) => (
-                        <div key={status} className="bg-card p-4">
-                          <p className="text-sm font-medium">{status}</p>
-                          <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-                            In your tracker
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => onEnter("tracker")}
-                    className="rounded-2xl bg-foreground px-5 py-3 text-sm font-semibold text-background hover:opacity-90"
-                    data-testid="button-pricing-tracker"
-                  >
-                    Open application tracker
-                  </button>
+              {panel === "works" && (
+                <div className="relative mt-8 grid gap-5 md:grid-cols-2">
+                  {works.map((work) => (
+                    <WorkCard key={work.file} work={work} />
+                  ))}
                 </div>
               )}
             </div>
@@ -728,6 +938,12 @@ export function Landing({
                   </button>
                   <button
                     className="block hover:text-foreground"
+                    onClick={() => openPanel("works")}
+                  >
+                    Sample works
+                  </button>
+                  <button
+                    className="block hover:text-foreground"
                     onClick={() => onEnter("search")}
                   >
                     Search
@@ -785,6 +1001,9 @@ export function Landing({
                 </div>
               </div>
             </div>
+          </div>
+          <div className="mt-12 border-t border-border pt-10">
+            <NewsletterForm />
           </div>
         </div>
       </footer>
