@@ -34,6 +34,11 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def root():
+    return {"message": "Film Fund API is running"}
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
