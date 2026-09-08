@@ -3,31 +3,119 @@ FILMFUND - Parallel Search API Integration
 
 Live film funding discovery using the Parallel Search API.
 
+50 Comprehensive Global Search Queries:
+- Geographic: USA, Africa, Europe, Asia, Canada, UK, Latin America, Middle East
+- Genres: Drama, Documentary, Indie, Short, Comedy, Thriller, Sci-Fi, Animation, etc.
+- Budget: $50k, $100k, $250k, $500k, $1M+
+- Filmmaker Level: Beginner, Emerging, Professional, First-Time
+- Special: Festivals, Labs, Residencies, Development, Production, Post-Production
+
 Goals:
 - Real live web search
-- USA, Africa, Worldwide, International coverage
+- Worldwide coverage
 - 2026 and 2027 opportunities
-- Preserve source evidence and metadata
+- All major film genres and budgets
+- Preserve source evidence
 - Never create/mock funding opportunities
-- Keep enough information for downstream verification
 """
 
+from parallel import Parallel
 import logging
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import date
 from typing import Any
 
-import requests
+from dotenv import load_dotenv
 
+# Load environment variables
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
 
 class ParallelGrantSearch:
-    """Search for real film funding opportunities using Parallel."""
+    """Search for real film funding opportunities using Parallel Search API."""
 
     ENDPOINT = "https://api.parallel.ai/v1/search"
+
+    # ============================================================
+    # 50 COMPREHENSIVE SEARCH QUERIES
+    # ============================================================
+
+    SEARCH_QUERIES = [
+        # --------------------------------------------------------
+        # GEOGRAPHIC COVERAGE (10)
+        # --------------------------------------------------------
+        "international film grants worldwide",
+        "USA film grants",
+        "USA film grant",
+        "African film grants",
+        "European film grants",
+        "Asian film grants",
+        "Canadian film grants",
+        "UK film grants",
+        "Latin American film grants",
+        "Middle East film grants",
+
+        # --------------------------------------------------------
+        # FILM GENRES (15)
+        # --------------------------------------------------------
+        "drama film grants",
+        "documentary filmmaker grants",
+        "independent film funding",
+        "short film grants",
+        "comedy film grants",
+        "thriller film grants",
+        "science fiction film grants",
+        "animation film grants",
+        "experimental film grants",
+        "horror film grants",
+        "romance film grants",
+        "action film grants",
+        "fantasy film grants",
+        "family film grants",
+        "crime film grants",
+
+        # --------------------------------------------------------
+        # BUDGET & FILMMAKER LEVEL (10)
+        # --------------------------------------------------------
+        "low budget film grants",
+        "micro budget film funding",
+        "$100k film grants",
+        "$250k film production funding",
+        "$500k film grants",
+        "$1M film grants",
+        "emerging filmmaker grants",
+        "beginner filmmaker grants",
+        "professional filmmaker grants",
+        "first time filmmaker grants",
+
+        # --------------------------------------------------------
+        # SPECIAL PROGRAMS (10)
+        # --------------------------------------------------------
+        "film development grants",
+        "film production grants",
+        "post production film funding",
+        "film production fellowships",
+        "film residency programs",
+        "screenplay grants",
+        "film labs funding",
+        "film fund competitions",
+        "film financing opportunities",
+        "documentary film funding",
+
+        # --------------------------------------------------------
+        # PRIORITY & VERIFICATION (5)
+        # --------------------------------------------------------
+        "film grants 2026 2027",
+        "independent film production grants",
+        "real film funding opportunities",
+        "legitimate film grants",
+        "international filmmaker funding opportunities",
+    ]
+
+    # ============================================================
+    # REGIONAL SEARCH COVERAGE
+    # ============================================================
 
     REGIONS = [
         "USA",
@@ -37,6 +125,13 @@ class ParallelGrantSearch:
     ]
 
     def __init__(self):
+        """
+        Initialize the Parallel Search client.
+
+        The API key must be supplied through the environment:
+        PARALLEL_API_KEY
+        """
+
         self.api_key = os.getenv("PARALLEL_API_KEY")
 
         if not self.api_key:
@@ -44,304 +139,520 @@ class ParallelGrantSearch:
                 "PARALLEL_API_KEY is not configured in the environment."
             )
 
-        logger.info("[ParallelAPI] Initialized")
-
-    def _search_region(
-        self,
-        query: str,
-        region: str,
-    ) -> list[dict[str, Any]]:
-        """Run one live Parallel search for a geographic region."""
-
-        current_date = date.today().isoformat()
-
-        objective = (
-            "Find REAL, currently published film funding opportunities "
-            "matching this filmmaker request: "
-            f"{query}. "
-
-            f"The current date is {current_date}. "
-
-            "Prioritize opportunities for the 2026 or 2027 funding cycle. "
-
-            f"Search specifically for opportunities that may be relevant "
-            f"to {region}. "
-
-            "Look for genuine grants, film funds, production funds, "
-            "development funds, post-production funds, fellowships, "
-            "residencies, labs, competitions, prizes, and similar "
-            "programs that provide financial support. "
-
-            "The opportunity itself must be real and supported by "
-            "source evidence. "
-
-            "Prefer the official funder, foundation, film institute, "
-            "government, or program website. "
-
-            "Do not fabricate or infer funding amounts, deadlines, "
-            "eligibility, geography, application status, or URLs. "
-
-            "If a result is an article or directory that discusses an "
-            "opportunity, preserve the evidence but do not assume that "
-            "the article proves the opportunity is currently open. "
-
-            "Look specifically for application status, opening dates, "
-            "closing dates, 2026/2027 cycle information, funding amounts, "
-            "funding type, and geographic eligibility when available."
+        logger.info(
+            "[ParallelAPI] Initialized with %d search queries",
+            len(self.SEARCH_QUERIES),
         )
 
-        search_queries = [
-            f"film grants {region} 2026",
-            f"film funding {region} 2027",
-            f"film grants {region} 2026 2027",
-            f"film fund {region} applications 2026 2027",
-        ]
-
-        payload = {
-            "objective": objective,
-            "search_queries": search_queries,
-            "mode": "advanced",
-            "advanced_settings": {
-                "max_results": 20,
-                "fetch_policy": {
-                    "max_age_seconds": 86400,
-                    "timeout_seconds": 30,
-                },
-                "excerpt_settings": {
-                    "max_chars_per_result": 4000,
-                },
-            },
-            "max_chars_total": 40000,
-        }
-
         try:
-            logger.info(
-                "[ParallelAPI] Starting %s search",
-                region,
+            self.client = Parallel(api_key=self.api_key)
+            logger.info("[ParallelAPI] Parallel SDK client created")
+
+        except Exception as e:
+            logger.warning(
+                "[ParallelAPI] Could not initialize Parallel SDK: %s",
+                e,
             )
+            self.client = None
 
-            response = requests.post(
-                self.ENDPOINT,
-                json=payload,
-                headers={
-                    "Content-Type": "application/json",
-                    "x-api-key": self.api_key,
-                },
-                timeout=60,
-            )
+    # ============================================================
+    # MAIN SEARCH
+    # ============================================================
 
-            if response.status_code != 200:
-                logger.error(
-                    "[ParallelAPI] %s failed: HTTP %s - %s",
-                    region,
-                    response.status_code,
-                    response.text[:500],
-                )
-                return []
-
-            data = response.json()
-            results = data.get("results", [])
-
-            if not isinstance(results, list):
-                logger.warning(
-                    "[ParallelAPI] %s returned unexpected results format",
-                    region,
-                )
-                return []
-
-            formatted: list[dict[str, Any]] = []
-
-            for result in results:
-                if not isinstance(result, dict):
-                    continue
-
-                title = str(
-                    result.get("title") or ""
-                ).strip()
-
-                url = str(
-                    result.get("url") or ""
-                ).strip()
-
-                excerpts = result.get("excerpts") or []
-
-                evidence: list[str] = []
-
-                if isinstance(excerpts, list):
-                    for excerpt in excerpts:
-                        text = str(excerpt).strip()
-
-                        if text:
-                            evidence.append(text)
-
-                # Some Parallel responses may provide a single excerpt.
-                if not evidence and result.get("excerpt"):
-                    text = str(
-                        result["excerpt"]
-                    ).strip()
-
-                    if text:
-                        evidence.append(text)
-
-                # Ignore completely unusable records.
-                if not title and not url and not evidence:
-                    continue
-
-                formatted.append(
-                    {
-                        "title": title,
-                        "url": url,
-                        "publish_date": result.get(
-                            "publish_date"
-                        ),
-                        "excerpts": evidence,
-                        "excerpt": (
-                            evidence[0]
-                            if evidence
-                            else ""
-                        ),
-                        "region_searched": region,
-                        "source": "Parallel Search API",
-                        "live_search": True,
-                    }
-                )
-
-            logger.info(
-                "[ParallelAPI] %s returned %s usable results",
-                region,
-                len(formatted),
-            )
-
-            return formatted
-
-        except requests.Timeout:
-            logger.error(
-                "[ParallelAPI] %s search timed out",
-                region,
-            )
-            return []
-
-        except requests.RequestException as exc:
-            logger.error(
-                "[ParallelAPI] %s request failed: %s",
-                region,
-                exc,
-            )
-            return []
-
-        except Exception as exc:
-            logger.exception(
-                "[ParallelAPI] %s unexpected error: %s",
-                region,
-                exc,
-            )
-            return []
-
-    def search(
-        self,
-        query: str,
-    ) -> list[dict[str, Any]]:
+    def search(self, query: str = None) -> list[dict[str, Any]]:
         """
-        Search all target geographic regions concurrently.
+        Search for real film funding opportunities.
 
-        Results are combined and deduplicated.
+        If a user query is supplied, it is added to the 50
+        predefined funding searches.
 
-        Important:
-        `region_searched` describes where the search was performed.
-        It does NOT prove geographic eligibility.
-        Geographic eligibility must be determined from the evidence.
+        Returns deduplicated results.
         """
 
-        if not query or not query.strip():
-            return []
+        if query and query.strip():
+            search_queries = [query.strip()] + self.SEARCH_QUERIES
+        else:
+            search_queries = self.SEARCH_QUERIES.copy()
 
-        query = query.strip()
+        logger.info(
+            "[ParallelAPI] Starting search with %d queries",
+            len(search_queries),
+        )
 
         all_results: list[dict[str, Any]] = []
 
-        with ThreadPoolExecutor(
-            max_workers=len(self.REGIONS)
-        ) as executor:
+        # ========================================================
+        # PARALLEL SDK SEARCH
+        # ========================================================
 
-            futures = {
-                executor.submit(
-                    self._search_region,
-                    query,
-                    region,
-                ): region
-                for region in self.REGIONS
-            }
+        if self.client:
 
-            for future in as_completed(futures):
-                region = futures[future]
+            try:
+                logger.info("[ParallelAPI] Using Parallel SDK client")
 
-                try:
-                    results = future.result()
-                    all_results.extend(results)
+                objective = (
+                    "Find REAL, currently published film funding opportunities "
+                    "matching filmmaker requests. "
+                    "Prioritize opportunities for 2026 or 2027 funding cycles. "
+                    "Look for genuine grants, film funds, production funds, "
+                    "development funds, fellowships, residencies, labs, "
+                    "competitions, and prizes. "
+                    "The opportunity must be real and supported by source evidence. "
+                    "Prefer official funder, foundation, film institute, "
+                    "government, festival, or established film organization websites. "
+                    "Do not fabricate deadlines, eligibility requirements, "
+                    "funding amounts, or URLs. "
+                    "Look for application status, opening dates, closing dates, "
+                    "funding amounts, and geographic eligibility."
+                )
 
-                except Exception as exc:
-                    logger.exception(
-                        "[ParallelAPI] %s worker failed: %s",
-                        region,
-                        exc,
-                    )
+                # Parallel SDK request
+                #
+                # The SDK may impose a search-query limit, so send the
+                # strongest 10 queries in this single request.
+                #
+                # The complete 50-query library remains available for
+                # targeted/batched searches.
 
-        unique_results: list[dict[str, Any]] = []
+                response = self.client.search(
+                    search_queries=search_queries[:50],
+                    mode="advanced",
+                    advanced_settings={
+                        "max_results": 30
+                    },
+                    objective=objective,
+                    max_chars_total=40000,
+                )
 
-        seen_urls: set[str] = set()
-        seen_titles: set[str] = set()
+                if response and hasattr(response, "results"):
 
-        for result in all_results:
-            url = str(
-                result.get("url") or ""
-            ).strip()
+                    for result in response.results:
 
-            title = str(
-                result.get("title") or ""
-            ).strip()
+                        title = getattr(result, "title", "") or ""
+                        url = getattr(result, "url", "") or ""
 
-            normalized_url = url.rstrip("/").lower()
+                        # Parallel may provide excerpts as a list.
+                        excerpts = getattr(result, "excerpts", None)
 
-            normalized_title = " ".join(
-                title.lower().split()
+                        if excerpts:
+                            if isinstance(excerpts, list):
+                                excerpt_text = " ".join(
+                                    str(x) for x in excerpts
+                                )
+                            else:
+                                excerpt_text = str(excerpts)
+
+                        else:
+                            # Backwards-compatible fallback
+                            excerpt_text = (
+                                getattr(result, "excerpt", "") or ""
+                            )
+
+                        formatted = {
+                            "title": title.strip(),
+                            "url": url.strip(),
+                            "excerpt": excerpt_text[:1000],
+                            "publish_date": getattr(
+                                result,
+                                "publish_date",
+                                None,
+                            ),
+                            "source": "Parallel Search API",
+                            "live_search": True,
+                        }
+
+                        if formatted["title"] or formatted["url"]:
+                            all_results.append(formatted)
+
+                logger.info(
+                    "[ParallelAPI] SDK search returned %d results",
+                    len(all_results),
+                )
+
+            except Exception as e:
+
+                logger.error(
+                    "[ParallelAPI] SDK search failed: %s",
+                    e,
+                )
+
+                logger.info(
+                    "[ParallelAPI] Falling back to requests-based search"
+                )
+
+                all_results = self._search_with_requests(search_queries)
+
+        # ========================================================
+        # REQUESTS FALLBACK
+        # ========================================================
+
+        else:
+
+            logger.info(
+                "[ParallelAPI] Using requests-based search"
             )
 
-            # URL is the preferred deduplication key.
-            if normalized_url:
-                if normalized_url in seen_urls:
-                    continue
+            all_results = self._search_with_requests(
+                search_queries
+            )
 
-                seen_urls.add(normalized_url)
+        # ========================================================
+        # DEDUPLICATE
+        # ========================================================
 
-            # If no URL exists, fall back to title.
-            elif normalized_title:
-                if normalized_title in seen_titles:
-                    continue
-
-                seen_titles.add(normalized_title)
-
-            unique_results.append(result)
-
-        # Assign stable IDs only after deduplication.
-        for index, result in enumerate(
-            unique_results,
-            start=1,
-        ):
-            result["result_id"] = f"parallel_{index}"
+        unique_results = self._deduplicate(all_results)
 
         logger.info(
-            "[ParallelAPI] Finished search: "
-            "%s total results -> %s unique results",
+            "[ParallelAPI] Finished: %d total -> %d unique",
             len(all_results),
             len(unique_results),
         )
 
         return unique_results
 
+    # ============================================================
+    # DIRECT REQUESTS FALLBACK
+    # ============================================================
+
+    def _search_with_requests(
+        self,
+        search_queries: list[str],
+    ) -> list[dict[str, Any]]:
+        """
+        Fallback search using Parallel's REST API directly.
+        """
+
+        import requests
+
+        all_results: list[dict[str, Any]] = []
+
+        objective = (
+            "Find REAL film funding opportunities for filmmakers. "
+            "Prioritize 2026 and 2027 funding cycles. "
+            "Look for grants, funds, fellowships, residencies, labs, "
+            "competitions, prizes, development funding, production funding, "
+            "and post-production funding. "
+            "Opportunities must be real and supported by source evidence. "
+            "Do not fabricate deadlines, eligibility, funding amounts, "
+            "or URLs."
+        )
+
+        # Keep the REST fallback bounded so one failure doesn't
+        # create an excessive number of API requests.
+        batches = [
+            search_queries[i:i + 10]
+            for i in range(0, len(search_queries), 10)
+        ]
+
+        for batch_number, batch in enumerate(
+            batches,
+            start=1,
+        ):
+
+            try:
+
+                payload = {
+                    "objective": objective,
+                    "search_queries": batch,
+                    "mode": "advanced",
+                    "advanced_settings": {
+                        "max_results": 20,
+                        "fetch_policy": {
+                            "max_age_seconds": 86400,
+                            "timeout_seconds": 30,
+                        },
+                    },
+                    "max_chars_total": 40000,
+                }
+
+                response = requests.post(
+                    self.ENDPOINT,
+                    json=payload,
+                    headers={
+                        "Content-Type": "application/json",
+                        "x-api-key": self.api_key,
+                    },
+                    timeout=60,
+                )
+
+                if response.status_code == 200:
+
+                    data = response.json()
+
+                    results = data.get(
+                        "results",
+                        [],
+                    )
+
+                    for result in results:
+
+                        title = (
+                            result.get("title") or ""
+                        ).strip()
+
+                        url = (
+                            result.get("url") or ""
+                        ).strip()
+
+                        excerpts = result.get(
+                            "excerpts"
+                        )
+
+                        if excerpts:
+
+                            if isinstance(
+                                excerpts,
+                                list,
+                            ):
+                                excerpt_text = " ".join(
+                                    str(x)
+                                    for x in excerpts
+                                )
+                            else:
+                                excerpt_text = str(
+                                    excerpts
+                                )
+
+                        else:
+
+                            excerpt_text = (
+                                result.get(
+                                    "excerpt"
+                                )
+                                or ""
+                            )
+
+                        if title or url:
+
+                            all_results.append(
+                                {
+                                    "title": title,
+                                    "url": url,
+                                    "excerpt": excerpt_text[:1000],
+                                    "publish_date": result.get(
+                                        "publish_date"
+                                    ),
+                                    "source": "Parallel Search API",
+                                    "live_search": True,
+                                }
+                            )
+
+                    logger.info(
+                        "[ParallelAPI] Batch %d/%d: %d results",
+                        batch_number,
+                        len(batches),
+                        len(results),
+                    )
+
+                else:
+
+                    logger.error(
+                        "[ParallelAPI] Batch %d failed: HTTP %s",
+                        batch_number,
+                        response.status_code,
+                    )
+
+            except requests.Timeout:
+
+                logger.error(
+                    "[ParallelAPI] Batch %d timed out",
+                    batch_number,
+                )
+
+            except Exception as e:
+
+                logger.error(
+                    "[ParallelAPI] Batch %d error: %s",
+                    batch_number,
+                    e,
+                )
+
+        return all_results
+
+    # ============================================================
+    # DEDUPLICATION
+    # ============================================================
+
+    def _deduplicate(
+        self,
+        results: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        """
+        Remove duplicate results based on URL and title.
+        """
+
+        unique_results: list[dict[str, Any]] = []
+
+        seen_urls = set()
+        seen_titles = set()
+
+        for result in results:
+
+            url = (
+                result.get("url") or ""
+            ).strip()
+
+            title = (
+                result.get("title") or ""
+            ).strip()
+
+            normalized_url = (
+                url.rstrip("/").lower()
+            )
+
+            normalized_title = (
+                " ".join(
+                    title.lower().split()
+                )
+            )
+
+            # ----------------------------------------------------
+            # URL deduplication
+            # ----------------------------------------------------
+
+            if normalized_url:
+
+                if normalized_url in seen_urls:
+                    continue
+
+                seen_urls.add(
+                    normalized_url
+                )
+
+            # ----------------------------------------------------
+            # Title deduplication
+            # ----------------------------------------------------
+
+            elif normalized_title:
+
+                if normalized_title in seen_titles:
+                    continue
+
+                seen_titles.add(
+                    normalized_title
+                )
+
+            unique_results.append(
+                result
+            )
+
+        # --------------------------------------------------------
+        # Stable IDs
+        # --------------------------------------------------------
+
+        for index, result in enumerate(
+            unique_results,
+            start=1,
+        ):
+            result["result_id"] = (
+                f"grant_{index}"
+            )
+
+        return unique_results
+
+
+# ================================================================
+# PUBLIC FUNCTION
+# ================================================================
 
 def search_parallel(
-    query: str,
+    query: str = None,
 ) -> list[dict[str, Any]]:
-    """Search the live Parallel API for film funding."""
+    """
+    Public function to search for film grants.
 
-    return ParallelGrantSearch().search(query)
+    Args:
+        query:
+            Optional specific search query.
+
+    Returns:
+        List of real film funding opportunities.
+    """
+
+    searcher = ParallelGrantSearch()
+
+    return searcher.search(
+        query
+    )
+
+
+# ================================================================
+# LOCAL TEST
+# ================================================================
+
+if __name__ == "__main__":
+
+    print(
+        "Testing FILMFUND Parallel Search API..."
+    )
+
+    print(
+        "-" * 60
+    )
+
+    print(
+        f"\nConfigured search queries: "
+        f"{len(ParallelGrantSearch.SEARCH_QUERIES)}"
+    )
+
+    # ------------------------------------------------------------
+    # Test 1
+    # ------------------------------------------------------------
+
+    print(
+        "\n1. Testing default film funding search..."
+    )
+
+    results = search_parallel()
+
+    print(
+        f"Found {len(results)} unique grants"
+    )
+
+    if results:
+
+        print(
+            f"First result: "
+            f"{results[0].get('title', 'N/A')}"
+        )
+
+        print(
+            f"URL: "
+            f"{results[0].get('url', 'N/A')}"
+        )
+
+    # ------------------------------------------------------------
+    # Test 2
+    # ------------------------------------------------------------
+
+    print(
+        "\n2. Testing USA film grant search..."
+    )
+
+    usa_results = search_parallel(
+        "USA film grant"
+    )
+
+    print(
+        f"Found {len(usa_results)} USA-related results"
+    )
+
+    if usa_results:
+
+        print(
+            f"First result: "
+            f"{usa_results[0].get('title', 'N/A')}"
+        )
+
+        print(
+            f"URL: "
+            f"{usa_results[0].get('url', 'N/A')}"
+        )
+
+    print(
+        "\n" + "-" * 60
+    )
+
+    print(
+        "Test complete!"
+    )

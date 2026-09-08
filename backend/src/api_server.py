@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
-from filmfund_adk_agent import search_film_funding
+from src.filmfund_adk_agent import search_film_funding
 
 app = FastAPI(title="Film Fund API")
 

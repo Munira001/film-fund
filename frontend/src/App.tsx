@@ -1637,13 +1637,13 @@ function GrantCard({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-        {grant.matchedScripts.length ? (
+        {(grant.matchedScripts ?? []).length ? (
           <>
             <span className="font-semibold text-brand">
               Fits:
             </span>
 
-            {grant.matchedScripts.map(
+            {(grant.matchedScripts ?? []).map(
               (script) => (
                 <span
                   key={script}
@@ -2366,28 +2366,28 @@ function ResourcesPage() {
       </section>
 
       <section className="rounded-[10px] border border-border bg-card p-6">
-          <h2 className="text-base font-semibold">
-            Industry resources
-          </h2>
+        <h2 className="text-base font-semibold">
+          Industry resources
+        </h2>
 
-          <div className="mt-5 space-y-2">
-            {links.map(
-              (link) => (
-                <a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  data-testid={`link-resource-${link.name}`}
-                  className="flex items-center justify-between rounded-lg border border-border px-4 py-3 text-sm font-semibold hover:bg-muted/60"
-                >
-                  {link.name}
-                  <ExternalLink size={14} />
-                </a>
-              ),
-            )}
-          </div>
-        </section>
+        <div className="mt-5 space-y-2">
+          {links.map(
+            (link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noreferrer"
+                data-testid={`link-resource-${link.name}`}
+                className="flex items-center justify-between rounded-lg border border-border px-4 py-3 text-sm font-semibold hover:bg-muted/60"
+              >
+                {link.name}
+                <ExternalLink size={14} />
+              </a>
+            ),
+          )}
+        </div>
+      </section>
     </div>
   );
 }

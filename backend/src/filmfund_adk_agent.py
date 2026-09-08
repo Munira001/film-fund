@@ -15,8 +15,7 @@ from typing import Any
 
 from google.adk.agents import LlmAgent
 
-from parallel_api import ParallelGrantSearch
-
+from src.parallel_api import ParallelGrantSearch
 
 logger = logging.getLogger(__name__)
 
