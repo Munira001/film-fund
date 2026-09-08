@@ -1,15 +1,29 @@
+import json
 import os
+import re
+from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 from filmfund_adk_agent import search_film_funding
 
 app = FastAPI(title="Film Fund API")
+
+# Newsletter signups from the landing page footer are appended here.
+NEWSLETTER_FILE = (
+    Path(__file__).resolve().parents[1] / "data" / "newsletter_subscribers.json"
+)
+EMAIL_PATTERN = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
+
+
+class NewsletterSignup(BaseModel):
+    email: str
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,6 +37,32 @@ app.add_middleware(
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.post("/api/newsletter")
+def newsletter_signup(payload: NewsletterSignup):
+    email = payload.email.strip().lower()
+    if not EMAIL_PATTERN.match(email):
+        raise HTTPException(status_code=422, detail="Enter a valid email address")
+
+    NEWSLETTER_FILE.parent.mkdir(parents=True, exist_ok=True)
+    subscribers: list[dict] = []
+    if NEWSLETTER_FILE.exists():
+        try:
+            subscribers = json.loads(NEWSLETTER_FILE.read_text() or "[]")
+        except json.JSONDecodeError:
+            subscribers = []
+
+    if not any(entry.get("email") == email for entry in subscribers):
+        subscribers.append(
+            {
+                "email": email,
+                "subscribed_at": datetime.now(timezone.utc).isoformat(),
+            }
+        )
+        NEWSLETTER_FILE.write_text(json.dumps(subscribers, indent=2) + "\n")
+
+    return {"status": "ok", "email": email}
 
 
 @app.get("/api/grants/search")
