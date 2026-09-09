@@ -30,6 +30,7 @@ app.add_middleware(
     allow_origins=[
     "http://localhost:5173",
     "https://film-funds.vercel.app",
+    "https://film-fund-umber.vercel.app",
 ],
     allow_credentials=True,
     allow_methods=["*"],
