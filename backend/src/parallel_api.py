@@ -251,7 +251,7 @@ class ParallelGrantSearch:
                         formatted = {
                             "title": title.strip(),
                             "url": url.strip(),
-                            "excerpt": excerpt_text[:1000],
+                            "excerpt": excerpt_text[:4000],
                             "publish_date": getattr(
                                 result,
                                 "publish_date",
