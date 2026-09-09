@@ -444,21 +444,5 @@ The long-term vision is an intelligent funding research assistant that helps
 filmmakers continuously identify realistic funding paths as their projects
 evolve.
 
-License
-
-See the LICENSE file included in this repository.
-
-
-### One important correction
-
-I deliberately **didn't put** this in the new README:
-
-> "Google Cloud Agent Builder is deployed"
-
-because we haven't actually deployed your agent to Google Cloud Agent Runtime.
-
-I also changed **Flask → FastAPI**, which matches your actual backend.
-
-And I kept **Parallel Search API front and center**, because that is the part of your project that is actually working live right now.
 
 **Before you replace your README, I would also check the actual repository for those claimed f
