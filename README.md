@@ -1,253 +1,259 @@
 # FilmFund — Film Funding Discovery Agent
 
-> An agentic funding research workspace for independent filmmakers.
+> An AI-powered film funding research workspace for independent filmmakers.
 
-FilmFund helps independent filmmakers discover, analyze, rank, and manage film funding opportunities from a single workspace.
+FilmFund helps filmmakers discover relevant film funding opportunities using
+natural-language project requirements and live web research.
 
-Instead of manually searching across fragmented grant databases and websites, a filmmaker can describe their project and funding needs in natural language. FilmFund uses an agentic research workflow to find relevant opportunities, analyze them, and surface the strongest matches.
+Instead of manually searching across fragmented grant databases and websites,
+filmmakers can describe their project and funding needs, and FilmFund searches
+for relevant opportunities using the Parallel Search API.
+
+---
 
 ## The Problem
 
-Independent filmmakers often face a funding discovery problem, not simply a lack of funding.
+Finding film funding can be difficult and time-consuming.
 
-Film grants and financing opportunities are distributed across organizations, countries, eligibility requirements, deadlines, funding amounts, and application processes.
+Funding opportunities are distributed across organizations, countries,
+eligibility requirements, deadlines, funding amounts, genres, production
+stages, and application processes.
 
-Finding the right opportunity can require hours of manual research.
+Independent filmmakers may spend hours searching multiple websites just to
+determine which opportunities are relevant to their project.
 
 FilmFund is designed to reduce that research burden.
 
+---
+
 ## The Solution
 
-FilmFund turns a filmmaker's project requirements into a targeted funding research workflow:
+FilmFund turns a filmmaker's funding requirements into a targeted research
+workflow.
 
 ```text
-Filmmaker Profile
-       ↓
-Project Requirements
-       ↓
-Agentic Grant Discovery
-       ↓
-Opportunity Analysis
-       ↓
-Relevance & Match Scoring
-       ↓
-Ranked Opportunities
-       ↓
-Save / Compare / Track
+Filmmaker Requirements
+        ↓
+Targeted Funding Search
+        ↓
+Parallel Search API
+        ↓
+Live Web Evidence
+        ↓
+Opportunity Results
+        ↓
+Filtering & Matching
+        ↓
+Funding Shortlist
 
-The goal is to move filmmakers from:
+The goal is to help filmmakers move from:
 
 "Where can I find funding?"
 
 to:
 
-"Which opportunities should I pursue next?"
+"Which funding opportunities are relevant to my project?"
 
 What Makes FilmFund Agentic
 
-FilmFund is designed as an agentic research workflow rather than a static grant directory.
+FilmFund is designed around an AI-assisted research workflow rather than a
+static database of grant links.
 
-The system can:
+The project includes a Google ADK agent and a live Parallel Search integration.
 
-interpret a filmmaker's natural-language funding request
-generate targeted search queries
-search external funding sources
-collect and normalize opportunity data
-remove duplicate opportunities
-analyze grant information
-identify incomplete or suspicious information
-evaluate opportunities against filmmaker requirements
-rank relevant opportunities
-apply project-specific filters
-help filmmakers shortlist opportunities
-organize selected opportunities into an application workflow
+The research workflow can use filmmaker requirements such as:
 
-The agentic workflow reduces the amount of manual research required between having a film project and identifying realistic funding opportunities.
+Genre
+Location
+Project budget
+Production stage
+Experience level
+Funding requirements
+Project timeline
+Film format
+
+The system uses these requirements to create targeted funding searches and
+retrieve live web evidence.
+
+Evidence-first research
+
+FilmFund is designed to avoid inventing funding information.
+
+When a funding opportunity does not provide enough evidence for a specific
+field, the application can identify the information as unavailable rather than
+fabricating a value.
+
+Important information such as funding amounts, deadlines, eligibility, and
+source URLs should be based on available source evidence.
 
 Core Features
-Intelligent Grant Discovery
+1. Live Film Funding Discovery
 
-Filmmakers can describe what they are looking for using natural language.
+Filmmakers can search for opportunities using natural language.
 
 Example:
 
-Find film funding opportunities for an independent drama filmmaker
-with a $50,000 project budget.
+Documentary film funding for an independent filmmaker in Africa in 2026.
 
-FilmFund transforms the request into a targeted research workflow and retrieves relevant opportunities.
+FilmFund sends the research request through the Parallel Search API and
+returns relevant web results.
 
-Filmmaker Profile
+2. Filmmaker Profile
 
-FilmFund uses project information such as:
+FilmFund can use project information to improve funding discovery.
 
-location
-career level
-genre
-project budget
-production stage
-funding needs
-project timeline
+Relevant project information includes:
 
-These signals can be used to improve opportunity matching.
+Location
+Career level
+Genre
+Project budget
+Production stage
+Funding needs
+Project timeline
+3. Funding Filters
 
-Match Scoring
+Funding opportunities can be filtered using available criteria such as:
 
-Funding opportunities are evaluated using available signals such as:
+Genre
+Location
+Budget
+Eligibility
+Deadline
+Funding information
+4. Opportunity Matching
 
-relevance
-funding amount
-eligibility
-project fit
-timeline
+FilmFund can organize discovered opportunities around the filmmaker's
+requirements and available evidence.
 
-The strongest opportunities can then be surfaced first.
+Potential matching signals include:
 
-Grant Filtering
+Project relevance
+Genre
+Location
+Eligibility
+Funding information
+Timeline
+5. Save & Compare
 
-Opportunities can be filtered by criteria such as:
+Filmmakers can save promising opportunities and compare selected opportunities
+within the application.
 
-genre
-location
-budget
-eligibility
-deadline
-funding amount
-Save and Compare
+6. Application Tracking
 
-Filmmakers can save promising opportunities and compare selected grants within the workspace.
+Selected opportunities can be organized into an application workflow so
+filmmakers can keep track of opportunities they intend to pursue.
 
-Application Tracker
+7. Funding Research Resources
 
-Selected opportunities can be moved into an application workflow so filmmakers can keep track of funding opportunities they intend to pursue.
-
-Budget Calculator
-
-The workspace includes budgeting functionality to help filmmakers understand their funding requirements and how opportunities relate to their project budget.
-
-Research Resources
-
-FilmFund also provides additional filmmaking and funding resources alongside discovered opportunities.
+FilmFund also provides additional research resources to help filmmakers
+navigate the funding process.
 
 Agentic Architecture
 
-FilmFund uses a multi-step research pipeline to transform filmmaker requirements into actionable funding opportunities.
+The current architecture combines a Google ADK agent with a live Parallel
+Search integration.
 
-                         FILMFUND
-                            |
-                            v
-                  Filmmaker Requirements
-                            |
-                            v
-                    Search Planning
-                            |
-                            v
-                 Parallel Search API
-                            |
-                            v
-                  Opportunity Results
-                            |
-                            v
-                 Analyze & Normalize
-                            |
-                            v
-                 Relevance / Matching
-                            |
-                            v
-                   Rank Opportunities
-                            |
-                            v
-                 Actionable Results
-                            |
-              +-------------+-------------+
-              |             |             |
-              v             v             v
-            Save         Compare       Track
-1. Grant Discovery
+                    FILMFUND
+                       │
+                       ▼
+              Filmmaker Requirements
+                       │
+                       ▼
+                Funding Search
+                       │
+                       ▼
+              Parallel Search API
+                       │
+                       ▼
+                 Live Evidence
+                       │
+                       ▼
+              Opportunity Results
+                       │
+                       ▼
+              Filtering / Matching
+                       │
+                       ▼
+               Funding Shortlist
+                       │
+              ┌────────┼────────┐
+              ▼        ▼        ▼
+            Save    Compare   Track
+Google ADK Agent
 
-search_grants()
+FilmFund includes a Google ADK agent in:
 
+backend/src/filmfund_adk_agent.py
+
+The agent is defined using Google's ADK LlmAgent and is designed to support
+film funding research.
+
+The agent has access to the FilmFund funding search tool:
+
+search_film_funding()
+
+The search tool connects the agent's research workflow to the Parallel Search
+API.
+
+Parallel Search Integration
+
+Parallel Search is the live web research and evidence layer of FilmFund.
+
+The integration is implemented in:
+
+backend/src/parallel_api.py
+
+The FilmFund search workflow uses Parallel to discover real funding
+opportunities from the web.
+
+The application preserves source information so that discovered opportunities
+can be connected back to their original web sources.
+
+FilmFund does not intentionally create or mock funding opportunities.
+
+Funding Search Workflow
+
+The core funding search function is:
+
+search_film_funding()
 Input
 
-Filmmaker information such as:
+The search can incorporate requirements such as:
 
-budget
-genre
-experience
-location
-timeline
-funding requirements
-
-Action
-
-Generates a targeted research query and uses the Parallel Search API to discover relevant opportunities.
-
+Genre
+Location
+Budget
+Experience
+Production stage
+Timeline
+Funding requirements
+Process
+User Requirements
+       ↓
+Targeted Search Query
+       ↓
+Parallel Search API
+       ↓
+Live Web Results
+       ↓
+Evidence Processing
+       ↓
+Funding Opportunities
 Output
 
-Raw funding opportunities.
+The backend returns structured research results containing information such
+as:
 
-2. Grant Analysis
+Opportunity title
+Source
+URL
+Description / excerpt
+Search result identifier
+Available evidence
 
-analyze_grants()
-
-Input
-
-Raw opportunity results.
-
-Action
-
-Processes discovered opportunities, extracts important information, checks available details, identifies suspicious or incomplete information, and normalizes the results.
-
-Output
-
-Structured funding opportunities ready for matching.
-
-3. Opportunity Ranking
-
-rank_opportunities()
-
-Input
-
-Analyzed opportunities and filmmaker requirements.
-
-Action
-
-Evaluates opportunities using available relevance, funding, eligibility, and timeline signals.
-
-Output
-
-Ranked opportunities.
-
-4. Producer Discovery
-
-search_producers()
-
-Input
-
-Project information such as budget and genre.
-
-Action
-
-Searches for potentially relevant production companies and producer opportunities.
-
-Output
-
-Potential production matches.
-
-5. Response Generation
-
-build_response()
-
-Input
-
-Funding opportunities, producer opportunities, and other research results.
-
-Action
-
-Organizes the research into a clear response with actionable next steps.
-
-Output
-
-Prioritized opportunities for the filmmaker.
+Information that is not supported by the retrieved evidence should not be
+presented as verified fact.
 
 Error Handling
 
@@ -255,19 +261,22 @@ FilmFund is designed to handle imperfect research results.
 
 Search API failure
 
-The system can fall back to available fallback or cached information where supported.
+If the live search service fails, the application reports the failure rather
+than pretending that live results were retrieved.
 
 No relevant results
 
-The system can suggest broader search criteria or alternative funding paths.
-
-Suspicious opportunity
-
-Potentially suspicious opportunities can be flagged for additional review rather than being presented as automatically trustworthy.
+The user can broaden or change their search requirements.
 
 Incomplete information
 
-Missing information is identified rather than being presented as verified.
+If a source does not provide a specific piece of information, FilmFund can
+identify it as unavailable rather than inventing an answer.
+
+Suspicious information
+
+Funding information that cannot be adequately supported by available evidence
+should be treated as requiring additional verification.
 
 Technology Stack
 Frontend
@@ -279,20 +288,21 @@ TanStack Query
 Lucide React
 Backend
 Python
-Flask
+FastAPI
 REST API
-Grant discovery and analysis services
 AI / Agent Infrastructure
-Google Gemini
-Google Cloud Agent Builder / ADK components
+Google ADK
+Gemini
 Parallel Search API
 Data & State
 Browser localStorage for selected client-side state
-Backend services for live opportunity discovery
+Backend services for live funding discovery
 Project Structure
 film-fund/
+│
 ├── backend/
 │   └── src/
+│       ├── api_server.py
 │       ├── parallel_api.py
 │       ├── filmfund_adk_agent.py
 │       ├── gemini_client.py
@@ -310,96 +320,145 @@ film-fund/
 │
 ├── main.py
 ├── requirements.txt
-├── test_adk.py
 ├── README.md
 ├── LICENSE
 └── .gitignore
 Running Locally
 Prerequisites
+
+Install:
+
 Node.js
 npm
 Python 3.x
-Required API credentials configured through environment variables
-Frontend
+
+API credentials should be configured through environment variables.
+
+Do not commit API keys or other secrets to GitHub.
+
+Start the Backend
+
+From the project root:
+
+cd backend
+pip install -r ..\requirements.txt
+
+Then start the backend using the project's configured FastAPI entry point.
+
+Start the Frontend
+
+Open another terminal:
+
 cd frontend
 npm install
 npm run dev
-Backend
 
-Install the Python dependencies:
+The Vite development server runs locally on the configured development port.
 
-pip install -r requirements.txt
+Environment Variables
 
-Then start the backend using the project's configured entry point.
+API credentials should be stored in environment variables or a local .env
+file.
 
-Environment variables should be provided through a local .env file or your deployment environment.
+Example:
 
-Do not commit API keys or other secrets to the repository.
+PARALLEL_API_KEY=your_key_here
+GEMINI_API_KEY=your_key_here
 
-Example Workflow
-Create or update a filmmaker profile.
-Describe the project's funding requirements.
-Search for funding opportunities.
-Review discovered opportunities.
-Analyze relevance and eligibility.
-Filter opportunities.
-Compare promising opportunities.
-Save the strongest matches.
-Move selected opportunities into the application tracker.
-Continue managing the funding pipeline from the workspace.
-Hackathon Submission
+Never commit real API keys to the repository.
+
 Live Application
 
 FilmFund — Live Demo
+
+The deployed application provides the FilmFund funding discovery experience.
 
 Source Code
 
 GitHub Repository
 
+The complete source code contains the frontend, backend, Parallel Search
+integration, and Google ADK agent implementation.
+
+Hackathon Track
+
+FilmFund is built for the Parallel Track of the Google Cloud Agentic
+Cinema hackathon.
+
+The project demonstrates:
+
+A functional AI-agent architecture
+Google ADK integration
+Gemini-based agent infrastructure
+Runtime use of the Parallel Search API
+Live web research
+Evidence-based funding discovery
+A working filmmaker-facing application
+
+The Parallel Search API is used as the live research layer for discovering
+film funding opportunities.
+
 Current Implementation
 
 The current FilmFund implementation focuses on:
 
-agentic funding discovery
-live grant search
-opportunity analysis
-relevance and match scoring
-filmmaker profile information
-filtering
-saved opportunities
-grant comparison
-application tracking
-funding research resources
-fallback handling for unsuccessful searches
+Live film funding discovery
+Parallel Search API integration
+Google ADK agent implementation
+Evidence-based research
+Natural-language funding searches
+Filmmaker project requirements
+Funding opportunity filtering
+Opportunity matching
+Saved opportunities
+Grant comparison
+Application tracking
+Funding research resources
+Error handling for unsuccessful searches
 
-The project is being developed as a functional agentic funding research platform rather than a static directory.
+FilmFund is being developed as a functional funding research application
+rather than a static directory of grant links.
 
 Roadmap
 
 Future improvements include:
 
-continuous funding opportunity monitoring
-deadline alerts
-deeper eligibility reasoning
-project-to-grant semantic matching
-automated application preparation
-grant requirement extraction
-personalized funding strategies
-multi-source opportunity verification
-funding pipeline analytics
-Why FilmFund
+Continuous funding opportunity monitoring
+Deadline alerts
+Deeper eligibility reasoning
+Project-to-grant semantic matching
+Automated application preparation
+Grant requirement extraction
+Personalized funding strategies
+Multi-source opportunity verification
+Funding pipeline analytics
+Why FilmFund?
 
 FilmFund is not intended to be another database of grant links.
 
-Its purpose is to reduce the research burden surrounding film financing by helping filmmakers discover opportunities that are relevant to their specific project.
+Its purpose is to reduce the research burden surrounding film financing by
+helping filmmakers discover funding opportunities that are relevant to their
+specific projects.
 
-The long-term vision is an intelligent funding assistant that continuously helps filmmakers identify realistic funding paths as their projects evolve.
+The long-term vision is an intelligent funding research assistant that helps
+filmmakers continuously identify realistic funding paths as their projects
+evolve.
+
+License
+
+See the LICENSE file included in this repository.
 
 
+### One important correction
 
+I deliberately **didn't put** this in the new README:
 
+> "Google Cloud Agent Builder is deployed"
 
+because we haven't actually deployed your agent to Google Cloud Agent Runtime.
 
+I also changed **Flask → FastAPI**, which matches your actual backend.
 
+And I kept **Parallel Search API front and center**, because that is the part of your project that is actually working live right now.
 
-
+**Before you replace your README, I would also check the actual repository for those claimed f
