@@ -181,9 +181,9 @@ def search_grants(
                 # Do NOT invent or guess fields.
                 # The real funding/deadline information is preserved
                 # inside Parallel's evidence above.
-                "deadline": item.get("deadline") or "Not stated",
-                "funding": item.get("funding") or "Not stated",
-"eligibility": item.get("eligibility") or "Not stated",
+                "deadline": item.get("deadline") ,
+                "funding": item.get("funding") ,
+"eligibility": item.get("eligibility") ,
 
                 "category": (
                     genre
@@ -192,7 +192,7 @@ def search_grants(
 
                 "location": (
                     location
-                    or "Not stated"
+                    
                 ),
 
                 # Explicitly expose the live Parallel evidence

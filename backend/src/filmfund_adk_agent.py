@@ -111,6 +111,28 @@ def search_film_funding(query: str) -> dict[str, Any]:
                         True,
                     ),
 
+                    # Preserve structured facts extracted from
+                    # the LIVE Parallel Search evidence.
+                    "funding": result.get(
+                        "funding",
+                        "Funding amount not stated in the available search evidence.",
+                    ),
+
+                    "deadline": result.get(
+                        "deadline",
+                        "Deadline not stated in the available search evidence.",
+                    ),
+
+                    "eligibility": result.get(
+                        "eligibility",
+                        "Eligibility details not stated in the available search evidence.",
+                    ),
+
+                    "parallel_evidence": result.get(
+                        "parallel_evidence",
+                        "",
+                    ),
+
                     # Preserve ALL evidence.
                     "excerpts": clean_excerpts,
 
