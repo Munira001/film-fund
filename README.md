@@ -1,4 +1,4 @@
-# FilmFund — Film Funding Discovery Agent
+ FilmFund — Film Funding Discovery Agent
 
 > An AI-powered film funding research workspace for independent filmmakers.
 
@@ -59,7 +59,8 @@ What Makes FilmFund Agentic
 FilmFund is designed around an AI-assisted research workflow rather than a
 static database of grant links.
 
-The project includes a Google ADK agent and a live Parallel Search integration.
+The project includes a Google ADK agent and a live Parallel Search
+integration.
 
 The research workflow can use filmmaker requirements such as:
 
@@ -75,7 +76,7 @@ Film format
 The system uses these requirements to create targeted funding searches and
 retrieve live web evidence.
 
-Evidence-first research
+Evidence-First Research
 
 FilmFund is designed to avoid inventing funding information.
 
@@ -151,8 +152,11 @@ navigate the funding process.
 
 Agentic Architecture
 
-The current architecture combines a Google ADK agent with a live Parallel
-Search integration.
+FilmFund includes a Google ADK agent alongside a live Parallel Search
+integration.
+
+The live funding search uses Parallel Search as the web research and evidence
+layer.
 
                     FILMFUND
                        │
@@ -259,21 +263,21 @@ Error Handling
 
 FilmFund is designed to handle imperfect research results.
 
-Search API failure
+Search API Failure
 
 If the live search service fails, the application reports the failure rather
 than pretending that live results were retrieved.
 
-No relevant results
+No Relevant Results
 
 The user can broaden or change their search requirements.
 
-Incomplete information
+Incomplete Information
 
 If a source does not provide a specific piece of information, FilmFund can
 identify it as unavailable rather than inventing an answer.
 
-Suspicious information
+Information Requiring Verification
 
 Funding information that cannot be adequately supported by available evidence
 should be treated as requiring additional verification.
@@ -387,7 +391,7 @@ Cinema hackathon.
 
 The project demonstrates:
 
-A functional AI-agent architecture
+AI-agent architecture
 Google ADK integration
 Gemini-based agent infrastructure
 Runtime use of the Parallel Search API
@@ -443,4 +447,3 @@ specific projects.
 The long-term vision is an intelligent funding research assistant that helps
 filmmakers continuously identify realistic funding paths as their projects
 evolve.
-
