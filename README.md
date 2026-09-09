@@ -444,5 +444,4 @@ The long-term vision is an intelligent funding research assistant that helps
 filmmakers continuously identify realistic funding paths as their projects
 evolve.
 
-
 **Before you replace your README, I would also check the actual repository for those claimed f
