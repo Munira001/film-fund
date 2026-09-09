@@ -177,7 +177,7 @@ async function fetchGrants(params: SearchParams): Promise<Grant[]> {
     searchParams.set("budget", String(params.budget));
   }
 
-  const response = await fetch(`/api/grants/search?${searchParams.toString()}`);
+  const response = await fetch(`https://film-fund.onrender.com/api/grants/search?${searchParams.toString()}`);
 
   if (!response.ok) {
     throw new Error("Grant search failed");
