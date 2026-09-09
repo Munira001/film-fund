@@ -181,9 +181,9 @@ def search_grants(
                 # Do NOT invent or guess fields.
                 # The real funding/deadline information is preserved
                 # inside Parallel's evidence above.
-                "deadline": "See Parallel evidence",
-                "funding": "See Parallel evidence",
-                "eligibility": "See Parallel evidence",
+                "deadline": evidence,
+                "funding": evidence,
+                "eligibility": evidence,
 
                 "category": (
                     genre

@@ -100,6 +100,7 @@ type Grant = {
   url: string;
   funding: string;
   deadline: string;
+  parallel_evidence?: string;
   category: string;
   location: string;
   trustScore: number;
@@ -1434,19 +1435,20 @@ function GrantDetailsModal({
             </p>
 
             <p className="mt-2 text-sm font-bold">
-              {grant.deadline ===
-                "Rolling"
-                ? "Rolling"
-                : new Date(
-                  grant.deadline,
-                ).toLocaleDateString(
-                  "en-US",
-                  {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  },
-                )}
+              {grant.deadline === "Rolling" ||
+                grant.deadline === "Not stated"
+                ? grant.deadline
+                : (() => {
+                  const date = new Date(grant.deadline);
+
+                  return Number.isNaN(date.getTime())
+                    ? "Not stated"
+                    : date.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    });
+                })()}
             </p>
           </div>
 
@@ -1461,13 +1463,14 @@ function GrantDetailsModal({
           </div>
         </div>
 
+
         <div className="mt-5 rounded-xl border border-border bg-muted/60 p-4">
           <p className="font-mono text-xs tracking-[0.5px] text-brand">
             Eligibility
           </p>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            {grant.eligibility}
+            {grant.parallel_evidence}
           </p>
         </div>
 
@@ -1595,20 +1598,20 @@ function GrantCard({
             Deadline
           </p>
 
-          <p className="mt-1 text-sm font-bold">
-            {grant.deadline ===
-              "Rolling"
-              ? "Rolling"
-              : new Date(
-                grant.deadline,
-              ).toLocaleDateString(
-                "en-US",
-                {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                },
-              )}
+          <p className="mt-2 text-sm font-bold">
+            {grant.deadline === "Rolling" ||
+              grant.deadline === "Not stated"
+              ? grant.deadline
+              : (() => {
+                const date = new Date(grant.deadline);
+                return Number.isNaN(date.getTime())
+                  ? "Not stated"
+                  : date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  });
+              })()}
           </p>
         </div>
       </div>
